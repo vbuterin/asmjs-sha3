@@ -1,3 +1,13 @@
+# ASMJS version of libkeccak-tiny
+
+Rebuilding instructions:
+
+1. Install emscripten
+
+2. emcc keccak-tiny.c -O1 -s ASM_JS=1 -s EXPORTED_FUNCTIONS='["_sha3_512", "_sha3_256", "_fips202_sha3_256", "_fips202_sha3_512"]'
+
+3. cat a.out.js wrapper.js > out.js
+
 # libkeccak-tiny
 
 An implementation of the FIPS-202-defined SHA-3 and SHAKE functions

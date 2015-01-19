@@ -133,7 +133,7 @@ static inline int hash(uint8_t* out, size_t outlen,
   // Squeeze output.
   foldP(out, outlen, setout);
   setout(a, out, outlen);
-  memset_s(a, 200, 0, 200);
+  memset(a, 0, 200);
   return 0;
 }
 
@@ -149,8 +149,18 @@ static inline int hash(uint8_t* out, size_t outlen,
     if (outlen > (bits/8)) {                                      \
       return -1;                                                  \
     }                                                             \
+    return hash(out, outlen, in, inlen, 200 - (bits / 4), 0x01);  \
+  }
+#define def_fips202_sha3(bits)                                    \
+  int fips202_sha3_##bits(uint8_t* out, size_t outlen,            \
+                  const uint8_t* in, size_t inlen) {              \
+    if (outlen > (bits/8)) {                                      \
+      return -1;                                                  \
+    }                                                             \
     return hash(out, outlen, in, inlen, 200 - (bits / 4), 0x06);  \
   }
+
+// delim = 0x06 for FIPS 202
 
 /*** FIPS202 SHAKE VOFs ***/
 defshake(128)
@@ -161,3 +171,8 @@ defsha3(224)
 defsha3(256)
 defsha3(384)
 defsha3(512)
+
+def_fips202_sha3(224)
+def_fips202_sha3(256)
+def_fips202_sha3(384)
+def_fips202_sha3(512)
